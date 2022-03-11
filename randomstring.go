@@ -224,6 +224,27 @@ func CookieFriendlyString(length int) string {
 	return string(b)
 }
 
+// PKCEFriendlyString generates a random, but PKCE code_verifier spec following,
+// string of
+// [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~"
+// with a minimum length of 43 characters and a maximum length of 128 characters.
+//
+// https://datatracker.ietf.org/doc/html/rfc7636#section-4.1
+func PKCECodeVerifierSpecString(length int) string {
+	const allowed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~"
+	if length < 43 {
+		length = 43
+	}
+	if length > 128 {
+		length = 128
+	}
+	b := make([]byte, length)
+	for i := 0; i < length; i++ {
+		b[i] = allowed[rand.Intn(len(allowed))]
+	}
+	return string(b)
+}
+
 /*HumanFriendlyEnglishString generates a random, but human-friendly, string of
  * the given length. It should be possible to read out loud and send in an email
  * without problems. The string alternates between vowels and consontants.
